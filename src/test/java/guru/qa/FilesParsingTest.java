@@ -4,11 +4,14 @@ import com.codeborne.pdftest.PDF;
 import com.codeborne.xlstest.XLS;
 import com.opencsv.CSVReader;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.io.Zip;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -42,6 +45,19 @@ public class FilesParsingTest {
             List<String[]> content = reader.readAll();
             assertThat(content.get(0)[1]).contains("lesson");
             assertThat(content.get(1)[0]).contains("Tuchs");
+        }
+    }
+
+    @Test
+    void zipParseTest() throws Exception {
+        try (
+                InputStream resource = cl.getResourceAsStream("example/cat.zip");
+                ZipInputStream zis = new ZipInputStream(resource);
+        ) {
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                assertThat(entry.getName()).contains("cat");
+            }
         }
     }
 }
