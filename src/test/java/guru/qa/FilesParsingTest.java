@@ -36,7 +36,7 @@ public class FilesParsingTest {
     }
 
     @Test
-    void cvsParseTest() throws Exception {
+    void csvParseTest() throws Exception {
         try (InputStream resource = cl.getResourceAsStream("example/qa_guru.csv");
              CSVReader reader = new CSVReader(new InputStreamReader(resource))) {
             List<String[]> content = reader.readAll();
