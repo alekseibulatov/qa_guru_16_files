@@ -5,6 +5,7 @@ import com.codeborne.xlstest.XLS;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.opencsv.CSVReader;
+import guru.qa.model.Glossary;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -73,6 +74,20 @@ public class FilesParsingTest {
             assertThat(jsonObject.get("title").getAsString()).isEqualTo("example glossary");
             assertThat(jsonObject.get("gloss_div").getAsJsonObject().get("title").getAsString()).isEqualTo("S");
             assertThat(jsonObject.get("gloss_div").getAsJsonObject().get("flag").getAsBoolean()).isEqualTo(true);
+        }
+    }
+
+    @Test
+    void jsonParseImprovedTest() throws Exception {
+        Gson gson = new Gson();
+        try (
+                InputStream stream = cl.getResourceAsStream("example/glossary.json");
+                InputStreamReader reader = new InputStreamReader(stream);
+        ) {
+            Glossary jsonObject = gson.fromJson(reader, Glossary.class);
+            assertThat(jsonObject.title).isEqualTo("example glossary");
+            assertThat(jsonObject.glossDiv.title).isEqualTo("S");
+            assertThat(jsonObject.glossDiv.flag).isTrue();
         }
     }
 }
