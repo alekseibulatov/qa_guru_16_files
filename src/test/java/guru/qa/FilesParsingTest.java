@@ -2,10 +2,13 @@ package guru.qa;
 
 import com.codeborne.pdftest.PDF;
 import com.codeborne.xlstest.XLS;
+import com.opencsv.CSVReader;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -31,4 +34,15 @@ public class FilesParsingTest {
                     .getStringCellValue().contains("Dulce"));
         }
     }
+
+    @Test
+    void cvsParseTest() throws Exception {
+        try (InputStream resource = cl.getResourceAsStream("example/qa_guru.csv");
+             CSVReader reader = new CSVReader(new InputStreamReader(resource))) {
+            List<String[]> content = reader.readAll();
+            assertThat(content.get(0)[1]).contains("lesson");
+            assertThat(content.get(1)[0]).contains("Tuchs");
+        }
+    }
 }
+
